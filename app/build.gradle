@@ -3,7 +3,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+properties.load(project.rootProject.file('key.properties').newDataInputStream())
 
 android {
     compileSdkVersion 25
@@ -18,10 +18,25 @@ android {
     }
 
     signingConfigs {
-        def isRelease = gradle.startParameter.taskNames.any { it.contains('Release') }
-        def path = isRelease ? properties.getProperty("keystore.path") : 'debug.keystore'
-        def password = isRelease ? properties.getProperty("keystore.password") : ''
-        def alias = isRelease ? properties.getProperty("keystore.alias") : ''
+        def keys = properties.keySet();
+        def size = properties.keySet().size();
+        println "size: " + size
+        size.times {
+            println "it is: " + properties.get(keys.getAt(it));
+        }
+        println(properties.stringPropertyNames())
+//        def isRelease = gradle.startParameter.taskNames.any { it.contains('Release') }
+//        def path = isRelease ? properties.getProperty("keystore.path") : 'debug.keystore'
+//        def password = isRelease ? properties.getProperty("keystore.password") : ''
+//        def alias = isRelease ? properties.getProperty("keystore.alias") : ''
+
+
+        def path = properties.getProperty("keystore.path");
+        println "path: " + path;
+        def password = properties.getProperty("keystore.password");
+        println "password: " + password;
+        def alias = properties.getProperty("keystore.alias");
+        println "alias: " + alias;
         myConfig {
             storeFile file(path)
             storePassword password
